@@ -1,0 +1,17 @@
+{
+  "name": "redirector",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Tushar",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "pm2": "^7.0.1"
+  }
+}
