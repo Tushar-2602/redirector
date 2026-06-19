@@ -9,7 +9,8 @@ function isValidUrl(str) {
 
 
 const redirect = (req,res)=>{
-    const base = req.path;
+    let base = req.path;
+    base = base.startsWith("/")? base.slice(1): base;
 
     
     const redirectedPath = process.env[base];

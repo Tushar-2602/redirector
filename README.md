@@ -13,70 +13,25 @@ Perfect for resumes, portfolios, social profiles, QR codes, and any link that yo
 * Free to self-host
 * Easy deployment on Render, VPS, EC2, Railway, and other Docker platforms
 
-## Usage
+---
 
-### Step 1: Create a `.env` file
+# Quick Start (Render Free Tier)
 
-```env
-leetcode_profile=https://leetcode.com/u/tushark2602/
-resume=https://example.com/resume.pdf
-portfolio=https://example.com
-```
+## 1. Create a New Web Service
 
-### Step 2: Add your redirect paths
+Choose **Deploy from Existing Docker Image**.
 
-Each environment variable name becomes a URL path.
-
-Example:
-
-```env
-leetcode_profile=https://leetcode.com/u/tushark2602/
-```
-
-creates:
-
-```text
-/leetcode_profile
-```
-
-### Step 3: Install Docker
-
-Install Docker on your machine.
-
-### Step 4: Run the container
-
-```bash
-docker run -p 3000:5000 --env-file .env docker.io/tkumar2602/redirector:latest
-```
-
-### Step 5: Open your redirect
-
-```text
-http://<your-public-ip>:3000/leetcode_profile
-or
-http://localhost:3000/leetcode_profile
-```
-
-You will be redirected to:
-
-```text
-https://leetcode.com/u/tushark2602/
-```
-
-## Deploy on Render
-
-1. Create a new Web Service.
-2. Select **Deploy from Existing Docker Image**.
-3. Use:
+Use:
 
 ```text
 docker.io/tkumar2602/redirector:latest
 ```
 
-4. Add your redirect variables in the Environment tab.
-5. Deploy.
+## 2. Add Environment Variables
 
-Example environment variables:
+Each environment variable name becomes a redirect path.
+
+Example:
 
 ```env
 resume=https://drive.google.com/file/d/your_resume
@@ -85,14 +40,174 @@ linkedin=https://linkedin.com/in/yourusername
 leetcode=https://leetcode.com/u/yourusername
 ```
 
-## Prevent Free Tier Sleeping
+## Redirect Path Rules
 
-If you are using Render's free tier, you can periodically ping your application using:
+Redirect path names must follow these rules:
+
+* Only alphabetic characters (`a-z`, `A-Z`)
+* Digits (`0-9`)
+* Underscore (`_`)
+* Hyphen (`-`)
+* Period (`.`)
+* Must **not** start with a digit
+
+Valid examples:
+
+```env
+github=https://github.com/yourusername
+leetcode_profile=https://leetcode.com/u/yourusername
+my-site=https://example.com
+resume.v2=https://example.com/resume
+```
+
+Invalid examples:
+
+```env
+123github=https://github.com/yourusername
+my profile=https://example.com
+my/path=https://example.com
+my@site=https://example.com
+```
+
+If an invalid path is provided, Redirector will display:
+
+```text
+Redirect path must consist of only alphabetic characters,
+digits, '_', '-', or '.', and must not start with a digit.
+```
+
+## 3. Deploy
+
+After deployment:
+
+```text
+https://your-app.onrender.com/github
+```
+
+redirects to:
+
+```text
+https://github.com/yourusername
+```
+
+---
+
+# Keep Render Free Tier Awake
+
+To reduce cold starts, periodically ping your application using:
 
 https://cron-job.org/
 
-Create a cron job that requests "/donotuse/test" every few minutes to reduce cold starts.
+Example URL:
 
-## License
+```text
+https://your-app.onrender.com/donotuse/test
+```
+
+Create a cron job that requests this URL every few minutes.
+
+---
+
+# Self Hosting with Docker
+
+## Step 1: Create a `.env` File
+
+Example:
+
+```env
+leetcode_profile=https://leetcode.com/u/tushark2602/
+github=https://github.com/tkumar2602
+linkedin=https://linkedin.com/in/yourusername
+```
+
+## Step 2: Install Docker
+
+Install Docker on your machine.
+
+## Step 3: Run the Container
+
+```bash
+docker run -p 3000:5000 --env-file .env docker.io/tkumar2602/redirector:latest
+```
+
+## Step 4: Open Your Redirect
+
+```text
+http://localhost:3000/leetcode_profile
+```
+
+or
+
+```text
+http://<your-public-ip>:3000/leetcode_profile
+```
+
+You will be redirected to:
+
+```text
+https://leetcode.com/u/tushark2602/
+```
+
+---
+
+# How It Works
+
+Given:
+
+```env
+github=https://github.com/yourusername
+```
+
+The service automatically creates:
+
+```text
+/github
+```
+
+which redirects to:
+
+```text
+https://github.com/yourusername
+```
+
+No database or configuration files are required beyond environment variables.
+
+---
+
+# Reserved Environment Variables
+
+Avoid using common system or platform environment variable names as redirect paths.
+
+Examples:
+
+```text
+PATH
+HOME
+USER
+USERNAME
+TEMP
+TMP
+SHELL
+PWD
+HOSTNAME
+PORT
+NODE_ENV
+```
+
+These variables may already be used by your operating system, Docker, Render, Railway, or other hosting platforms.
+
+Use custom names such as:
+
+```env
+github=https://github.com/yourusername
+resume=https://example.com/resume.pdf
+portfolio=https://example.com
+```
+
+instead.
+
+---
+
+# License
 
 MIT
